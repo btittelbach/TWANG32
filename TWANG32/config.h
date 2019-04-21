@@ -26,16 +26,21 @@
 #ifndef CONFIG_H
 	#define CONFIG_H
 
-#define DATA_PIN        16
-#define CLOCK_PIN       17
+#define DATA_PIN        13
+#define CLOCK_PIN       4
 
 /* Game is rendered to this and scaled down to your strip.
  This allows level definitions to work on all strip lengths  */
 #define VIRTUAL_LED_COUNT 1000  
 
 // what type of LED Strip....uncomment to define only one of these
-#define USE_APA102
-//#define USE_NEOPIXEL
+//#define USE_APA102
+#define USE_NEOPIXEL
+
+#define USE_TFT
+#define TFT_RST 33
+#define TFT_CS 14
+#define TFT_DC 27
 
 // Check to make sure LED choice was done right
 #if !defined(USE_NEOPIXEL) && !defined(USE_APA102)
@@ -59,7 +64,8 @@
   #define LED_TYPE        		 	NEOPIXEL
 	#define CONVEYOR_BRIGHTNESS 	40  // low neopixel values are nearly off, Neopixels need a higher value
 	#define LAVA_OFF_BRIGHTNESS  	15   // low neopixel values are nearly off, Neopixels need a higher value
-	#define MAX_LEDS 						 	288  // Neopixels cannot handle the framerate
+	#define MAX_LEDS 						 	40  // Neopixels cannot handle the framerate
+	// #define MAX_LEDS 						 	288  // Neopixels cannot handle the framerate
 	#define MIN_REDRAW_INTERVAL  	1000.0 / 60.0    // divide by frames per second..if you tweak adjust player speed
 #endif
 

@@ -54,6 +54,12 @@
 	#error "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
+#ifdef USE_TFT
+#include <Adafruit_GFX.h> // Core graphics library
+#include <Adafruit_ST7735.h> // Hardware-specific library
+#include <Fonts/FreeSerif9pt7b.h>
+#include <SPI.h>
+#endif
 
 
 #define DIRECTION            1
@@ -95,6 +101,9 @@ CRGB leds[VIRTUAL_LED_COUNT];
 RunningMedian MPUAngleSamples = RunningMedian(5);
 RunningMedian MPUWobbleSamples = RunningMedian(5);
 iSin isin = iSin();
+#ifdef USE_TFT
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+#endif
 
 //#define JOYSTICK_DEBUG  // comment out to stop serial debugging
 
@@ -228,7 +237,11 @@ void setup() {
 	stage = STARTUP;
 	stageStartTime = millis();
 	lives = user_settings.lives_per_level;
-	
+
+#ifdef USE_TFT
+	initTFTInfo();
+#endif
+
 }
 
 void loop() {
@@ -237,6 +250,7 @@ void loop() {
     
   ap_client_check(); // check for web client
   checkSerialInput();
+  updateTFTInfo();
 
   if(stage == PLAY){
       if(attacking){
@@ -1422,4 +1436,59 @@ void juggle() {
   }
 }
 
+void initTFTInfo() {
+	#ifdef USE_TFT
+	tft.initR(INITR_144GREENTAB);
+	tft.setFont(&FreeSerif9pt7b);
+	tft.setTextWrap(true);
+	tft.setTextColor(ST77XX_WHITE);
+	// tft.setTextColor(uint16_t color, uint16_t backgroundcolor);
+	// tft.setTextSize(uint8_t size);
+	#endif
+}
 
+
+void updateTFTInfo() {
+	static int last_level = -1;
+	static int last_lives = -1;
+	#ifdef USE_TFT
+	if (last_level != levelNumber || last_lives != lives) {
+		last_level = levelNumber;
+		last_lives = lives;
+
+		tft.fillScreen(ST77XX_BLACK);
+		// int16_t  x1, y1;
+		// uint16_t w, h;
+		// tft.getTextBounds(string, x, y, &x1, &y1, &w, &h);
+		tft.setCursor(1, 14);
+		tft.print("Level: ");
+		tft.print(levelNumber);
+		tft.print(" / ");
+		tft.println(15);
+		tft.print("Lives: ");
+		tft.println(lives);
+	}
+
+
+		tft.setCursor(1, 50);
+		tft.print("T:");
+		tft.println(joystickTilt);
+		tft.print("W:");
+		tft.println(joystickWobble);
+
+
+// int color = 100;
+// int i;
+// int t;
+// for(t = 0 ; t <= 4; t+=1) 
+// {
+// int x = 0;
+// int y = 0;
+// int w = tft.width()-2;
+// int h = tft.height()-2;
+// for(i = 0 ; i <= 16; i+=1) 
+// {
+// tft.drawRoundRect(x, y, w, h, 5, color);
+// }
+	#endif
+}

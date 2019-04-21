@@ -1,0 +1,7 @@
+13: WS2812
+33: TFT_RST
+14: TFT_CS
+27: TFT_DC
+25: DAC / Speaker
+22: SCL for MPU
+21: SDA for MPU
