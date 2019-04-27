@@ -58,6 +58,7 @@
 #include <Adafruit_GFX.h> // Core graphics library
 #include <Adafruit_ST7735.h> // Hardware-specific library
 #include <Fonts/FreeSerif9pt7b.h>
+#include <Fonts/FreeSerifBold12pt7b.h>
 #include <SPI.h>
 #endif
 
@@ -1449,6 +1450,8 @@ void initTFTInfo() {
 
 
 void updateTFTInfo() {
+	const auto color_label = ST77XX_WHITE;
+	const auto color_data = ST77XX_GREEN;
 	static int last_level = -1;
 	static int last_lives = -1;
 	#ifdef USE_TFT
@@ -1460,13 +1463,45 @@ void updateTFTInfo() {
 		// int16_t  x1, y1;
 		// uint16_t w, h;
 		// tft.getTextBounds(string, x, y, &x1, &y1, &w, &h);
-		tft.setCursor(1, 14);
-		tft.print("Level: ");
-		tft.print(levelNumber);
-		tft.print(" / ");
-		tft.println(15);
-		tft.print("Lives: ");
-		tft.println(lives);
+		if (playerAlive)
+		{
+			tft.setCursor(1, 14);
+			tft.setFont(&FreeSerif9pt7b);
+			tft.setTextColor(color_label);
+			tft.print("Level: ");
+			tft.setTextColor(color_data);
+			tft.print(levelNumber);
+			tft.print(" / ");
+			tft.println(15);
+			tft.setTextColor(color_label);
+			tft.print("Score: ");
+			tft.setTextColor(color_data);
+			tft.println(score);
+			tft.setTextColor(color_label);
+			tft.println("Lives:");
+			tft.setTextColor(color_data);
+			tft.setCursor(53, 14*6);
+			tft.setFont(&FreeSerifBold12pt7b);
+			tft.println(lives);
+		} else {
+			tft.setCursor(1, 16);
+			tft.setFont(&FreeSerifBold12pt7b);
+			tft.setTextColor(ST77XX_RED);
+			tft.println("Game Over");
+			tft.setFont(&FreeSerif9pt7b);
+			tft.setTextColor(color_label);
+			tft.print("Gamecount:");
+			tft.setTextColor(color_data);
+			tft.println(user_settings.games_played);
+			tft.setTextColor(color_label);
+			tft.print("HighScore: ");
+			tft.setTextColor(color_data);
+			tft.println(user_settings.high_score);
+			tft.setTextColor(color_label);
+			tft.print("Boss kills: ");
+			tft.setTextColor(color_data);
+			tft.println(user_settings.boss_kills);
+		}
 	}
 
 

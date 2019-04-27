@@ -70,7 +70,7 @@ This was ported from the [TWANG fork](https://github.com/bdring/TWANG) by bdring
 ## Hardware used:
 * ESP32, I typically use the NodeMCU-32S module
 * LED light strip. The more the better, maximum of 1000. Tested with 1x & 2x 144/meter, 12x 60/meter and 5m x 114/meter strips. This has been tested with APA102C and NeoPixel type strips. Anything compatible with the FastLED library should work.
-* MPU6050 accelerometer
+* MPU6050^ accelerometer
 * Spring doorstop, I used [these](http://smile.amazon.com/gp/product/B00J4Y5BU2)
 * Speaker and amplifier. I use a PAM8403 module. (ESP32 cannot drive a speaker as loudly as an Arduino)
 
