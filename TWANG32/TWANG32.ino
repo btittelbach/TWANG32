@@ -1452,67 +1452,99 @@ void initTFTInfo() {
 void updateTFTInfo() {
 	const auto color_label = ST77XX_WHITE;
 	const auto color_data = ST77XX_GREEN;
+	const auto font_big = &FreeSerifBold12pt7b;
+	const auto font_small = &FreeSerif9pt7b;
 	static int last_level = -1;
 	static int last_lives = -1;
 	static int last_score = -1;
+	static auto last_stage = stage;
 	#ifdef USE_TFT
-	if (last_level != levelNumber || last_lives != lives || last_score != score) {
+	if (last_level != levelNumber || last_lives != lives || last_score != score | last_stage != stage) {
 		last_level = levelNumber;
 		last_lives = lives;
 		last_score = score;
+		last_stage = stage;
 
 		tft.fillScreen(ST77XX_BLACK);
 		// int16_t  x1, y1;
 		// uint16_t w, h;
 		// tft.getTextBounds(string, x, y, &x1, &y1, &w, &h);
-		if (playerAlive)
-		{
-			tft.setCursor(1, 14);
-			tft.setFont(&FreeSerif9pt7b);
-			tft.setTextColor(color_label);
-			tft.print("Level: ");
-			tft.setTextColor(color_data);
-			tft.print(levelNumber);
-			tft.print(" / ");
-			tft.println(15);
-			tft.setTextColor(color_label);
-			tft.print("Score: ");
-			tft.setTextColor(color_data);
-			tft.println(score);
-			tft.setTextColor(color_label);
-			tft.println("Lives:");
-			tft.setTextColor(color_data);
-			tft.setCursor(53, 14*6);
-			tft.setFont(&FreeSerifBold12pt7b);
-			tft.println(lives);
-		} else {
-			tft.setCursor(1, 16);
-			tft.setFont(&FreeSerifBold12pt7b);
-			tft.setTextColor(ST77XX_RED);
-			tft.println("Game Over");
-			tft.setFont(&FreeSerif9pt7b);
-			tft.setTextColor(color_label);
-			tft.print("Gamecount:");
-			tft.setTextColor(color_data);
-			tft.println(user_settings.games_played);
-			tft.setTextColor(color_label);
-			tft.print("HighScore: ");
-			tft.setTextColor(color_data);
-			tft.println(user_settings.high_score);
-			tft.setTextColor(color_label);
-			tft.print("Boss kills: ");
-			tft.setTextColor(color_data);
-			tft.println(user_settings.boss_kills);
+
+		switch(stage) {
+			case STARTUP:
+			case DEAD:
+			case PLAY:
+			case BOSS_KILLED:
+			case WIN:
+				tft.setCursor(1, 14);
+				tft.setFont(font_small);
+				tft.setTextColor(color_label);
+				tft.print("Level: ");
+				tft.setTextColor(color_data);
+				tft.print(levelNumber);
+				tft.print(" / ");
+				tft.println(15);
+				tft.setTextColor(color_label);
+				tft.print("Score: ");
+				tft.setTextColor(color_data);
+				tft.println(score);
+				switch(stage) {
+					case BOSS_KILLED:
+						tft.setCursor(1, 14*6);
+						tft.setFont(font_big);
+						tft.println(" YOU WIN!");
+					break;
+					case WIN:
+						tft.setCursor(5, 14*6);
+						tft.setFont(font_big);
+						tft.println("Next Level");
+					break;
+					case DEAD:
+						tft.setCursor(1, 14*6);
+						tft.setFont(font_big);
+						tft.setTextColor(ST77XX_RED);
+						tft.println("   Ouch!");
+					break;
+					default:
+						tft.setTextColor(color_label);
+						tft.println("Lives:");
+						tft.setTextColor(color_data);
+						tft.setCursor(53, 14*6);
+						tft.setFont(font_big);
+						tft.println(lives);
+					break;
+				}
+				break;
+			default:
+				tft.setCursor(1, 16);
+				tft.setFont(font_big);
+				switch(stage) {
+					case GAMEOVER:
+					tft.setTextColor(ST77XX_RED);
+					tft.println("Game Over");
+					break;
+					case SCREENSAVER:
+					default:
+					tft.setTextColor(color_label);
+					tft.println("Wobble Me");
+					break;
+					}
+				tft.setFont(font_small);
+				tft.setTextColor(color_label);
+				tft.print("Gamecount:");
+				tft.setTextColor(color_data);
+				tft.println(user_settings.games_played);
+				tft.setTextColor(color_label);
+				tft.print("HighScore: ");
+				tft.setTextColor(color_data);
+				tft.println(user_settings.high_score);
+				tft.setTextColor(color_label);
+				tft.print("Boss kills: ");
+				tft.setTextColor(color_data);
+				tft.println(user_settings.boss_kills);
+				break;
 		}
 	}
-
-
-		// tft.setCursor(1, 50);
-		// tft.print("T:");
-		// tft.println(joystickTilt);
-		// tft.print("W:");
-		// tft.println(joystickWobble);
-
 
 // int color = 100;
 // int i;
