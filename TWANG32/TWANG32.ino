@@ -1454,10 +1454,12 @@ void updateTFTInfo() {
 	const auto color_data = ST77XX_GREEN;
 	static int last_level = -1;
 	static int last_lives = -1;
+	static int last_score = -1;
 	#ifdef USE_TFT
-	if (last_level != levelNumber || last_lives != lives) {
+	if (last_level != levelNumber || last_lives != lives || last_score != score) {
 		last_level = levelNumber;
 		last_lives = lives;
+		last_score = score;
 
 		tft.fillScreen(ST77XX_BLACK);
 		// int16_t  x1, y1;
