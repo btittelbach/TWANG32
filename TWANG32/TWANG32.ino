@@ -1470,11 +1470,11 @@ void updateTFTInfo() {
 	}
 
 
-		tft.setCursor(1, 50);
-		tft.print("T:");
-		tft.println(joystickTilt);
-		tft.print("W:");
-		tft.println(joystickWobble);
+		// tft.setCursor(1, 50);
+		// tft.print("T:");
+		// tft.println(joystickTilt);
+		// tft.print("W:");
+		// tft.println(joystickWobble);
 
 
 // int color = 100;
